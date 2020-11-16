@@ -1,8 +1,9 @@
 const Path = require('path');
 const dir = (...args) => Path.resolve(__dirname, ...args);
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin  = require('copy-webpack-plugin');
 
 module.exports = {
-  mode: 'production',
   entry: dir('src/index.tsx'),
 
   resolve: {
@@ -11,7 +12,7 @@ module.exports = {
 
   module: {
     rules: [
-      {test:/\.tsx?$/, loader:'ts-loader', exclude:/node_modules/},
+      { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ },
     ],
   },
 
@@ -47,5 +48,15 @@ module.exports = {
     contentBase: dir('dist'),
     stats: 'errors-only',
   },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [
+        { from: "node_modules/quill/dist/quill.bubble.css", to: "quill.bubble.css" },
+        { from: "node_modules/quill/dist/quill.snow.css", to: "quill.snow.css" },
+        { from: "node_modules/quill/dist/quill.core.css", to: "quill.core.css" },
+      ]
+    })
+  ]
 
-};
+}; 

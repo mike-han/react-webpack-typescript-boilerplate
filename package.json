@@ -5,12 +5,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "npm run build:lib && npm run build:dist && npm run build:css",
-    "build:lib": "tsc",
-    "build:dist": "webpack",
-    "build:css": "cpy 'node_modules/quill/dist/quill.*.css' dist",
-    "demo": "cpy './dist/react-editor.js' demo && cpy './dist/quill.snow.css' demo && superstatic demo",
-    "clean": "rimraf lib dist"
+    "build:dev": "webpack --mode development",
+    "build:prod": "webpack --mode production",
+    "demo": "webpack-dev-server --config webpack.config.demo.js --open",
+    "build:demo": "webpack --config webpack.config.demo.js --mode development"
   },
   "repository": {
     "type": "git",
@@ -33,13 +31,15 @@
   "devDependencies": {
     "@types/lodash-es": "^4.17.3",
     "@types/react": "^16.9.56",
-    "cpy-cli": "^3.1.1",
-    "rimraf": "^3.0.2",
-    "superstatic": "^7.0.1",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.3.1",
+    "html-webpack-plugin": "^4.5.0",
+    "react-dom": "^17.0.1",
     "ts-loader": "^8.0.10",
     "typescript": "^4.0.5",
     "webpack": "^5.4.0",
-    "webpack-cli": "^4.2.0"
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
     "lodash-es": "^4.17.15",

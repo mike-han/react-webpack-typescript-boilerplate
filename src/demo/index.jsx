@@ -1,18 +1,6 @@
-/* global React */
-/* global ReactEditor */
-'use strict';
-
-if (typeof React !== 'object') {
-  alert('React not found. Did you run "npm install"?');
-}
-
-if (typeof ReactEditor !== 'object' && typeof ReactEditor.default !== 'object') {
-  alert('ReactEditor not found. Did you run "build"?')
-}
-
-if(ReactEditor.default){
-  ReactEditor = ReactEditor.default
-}
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactEditor from '../index';
 
 var EMPTY_DELTA = {ops: []};
 
@@ -91,9 +79,9 @@ class Editor extends React.Component {
           value={this.state.value}
           readOnly={this.state.readOnly}
           onChange={this.onEditorChange}
-          onChangeSelection={this.onEditorChangeSelection}
-          onFocus={this.onEditorFocus}
-          onBlur={this.onEditorBlur}
+          onSelectionChange={this.onEditorChangeSelection}
+          onEditorFocus={this.onEditorFocus}
+          onEditorBlur={this.onEditorBlur}
         />}
       </div>
     );
