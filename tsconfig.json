@@ -1,20 +1,19 @@
 {
-  "include": [
-    "./src/**/*.ts",
-    "./src/**/*.tsx"
-  ],
   "compilerOptions": {
-    "strict": false,
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "declaration": true,
-    "sourceMap": true,
-    "inlineSources": true,
-    "lib": ["dom", "esnext"],
-    "types": ["node"],
     "jsx": "react",
-    "allowJs": true
-  }
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "outDir": "./build/",
+    "declarationDir": "./types" /* Output directory for generated declaration files. */,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "declaration": true /* Generates corresponding '.d.ts' file. */,
+    "target": "es5"
+  },
+  "include": [
+    "./src/**/*", "types.d.ts"
+  ]
 }

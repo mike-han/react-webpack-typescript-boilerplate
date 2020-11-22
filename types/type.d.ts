@@ -8,9 +8,6 @@ export declare type Operation = {
     retain?: number;
     attributes?: Formats;
 };
-/**
- * [Delta](https://quilljs.com/docs/delta/)
- */
 export interface DeltaValue {
     ops: Operation[];
     length?: () => any;
@@ -20,9 +17,6 @@ export interface DeltaValue {
     forEach?: (func: (op: Operation) => void) => void;
     map?: (func: (op: Operation) => any) => Operation[];
 }
-/**
- * Types of values supported by the rich text editor
- */
 export declare type EdiotrValue = DeltaValue | string;
 export interface RichSelection {
     index: number;
@@ -46,9 +40,6 @@ export interface KeyboardStatic {
         [x: string]: any;
     };
 }
-/**
- * [Quill editor API](https://quilljs.com/docs/api/#editor)
- */
 export declare type UnprivilegedEditor = {
     focus: () => void;
     blur: () => void;
@@ -85,9 +76,6 @@ export interface InsertText {
         [x: string]: any;
     }, source?: Sources): DeltaValue;
 }
-/**
- * [Quill editor API](https://quilljs.com/docs/api/#editor)
- */
 export declare type Editor = {
     root: HTMLDivElement;
     scroll: Blot;

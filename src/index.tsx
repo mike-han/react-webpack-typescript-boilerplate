@@ -287,7 +287,7 @@ const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.Forwar
       }
     };
 
-    editor.on('editor-change', (eventType: EventType, rangeOrDelta: RichSelection | DeltaValue, _, source: Sources) => {
+    editor.on('editor-change', (eventType: EventType, rangeOrDelta: RichSelection | DeltaValue, _: any, source: Sources) => {
       if (eventType === 'selection-change') {
         changeSelection(rangeOrDelta as RichSelection, source, unprivilegedEditor);
       }
