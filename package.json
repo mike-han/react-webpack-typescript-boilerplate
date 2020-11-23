@@ -2,17 +2,17 @@
   "name": "react-editor",
   "version": "1.0.0",
   "description": "A react component reply on quill.js",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "umd/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "build": "rimraf umd && npm run build-umd && npm run build-min",
     "build-umd": "cross-env NODE_ENV=development webpack src/index.tsx -o umd/react-editor.js",
     "build-min": "cross-env NODE_ENV=production webpack src/index.tsx -o umd/react-editor.min.js",
-    "demo": "webpack-dev-server --progress --host 127.0.0.1 --inline --config demo/webpack.config.js",
-    "test": "cross-env NODE_ENV=test karma start test/karma.conf.js",
+    "demo": "webpack-dev-server --config demo/webpack.config.js --open",
+    "build:demo": "webpack --config demo/webpack.config.js --mode development",
     "lint": "eslint './src/**/*.?(ts|tsx)'",
     "autofix": "eslint './src/**/*.?(ts|tsx)' --fix",
-    "analyse": "cross-env NODE_ENV=analyse webpack src/index.ts -o umd/Recharts.js",
+    "analyse": "cross-env NODE_ENV=analyse webpack src/index.ts -o umd/react-editor.js",
     "tsc": "tsc"
   },
   "repository": {
@@ -27,17 +27,31 @@
   "homepage": "https://github.com/mike-han/react-editor#readme",
   "files": [
     "umd/",
-    "lib/",
+    "types/",
     "types.d.ts",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
   ],
   "devDependencies": {
+    "@babel/core": "^7.12.7",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-react": "^7.12.7",
     "@types/lodash-es": "^4.17.3",
     "@types/react": "^16.9.56",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
+    "babel-loader": "^8.2.1",
     "copy-webpack-plugin": "^6.3.1",
     "cross-env": "^7.0.2",
+    "eslint": "^7.14.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "html-webpack-plugin": "^4.5.0",
     "react-dom": "^17.0.1",
     "rimraf": "^3.0.2",
@@ -54,6 +68,7 @@
     "react": "^17.0.1"
   },
   "peerDependencies": {
+    "quill": "^1.3.7",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   }

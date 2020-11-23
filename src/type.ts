@@ -1,4 +1,4 @@
-import { Blot } from 'parchment/dist/src/blot/abstract/blot';
+import { Blot } from 'parchment/dist/src/blot/abstract/blot'
 
 export type Formats = { [x: string]: any };
 
@@ -65,7 +65,7 @@ export type UnprivilegedEditor = {
   getFormat: (range?: RichSelection) => Formats;
   getIndex: (blot: any) => number;
   getLeaf: (index: number) => [any, number];
-  getHTML: () => string; //custom by root.innerHTML
+  getHTML: () => string; // custom by root.innerHTML
 }
 
 export type TextChangeHandler = (delta: DeltaValue, oldContents: DeltaValue, source: Sources) => any;

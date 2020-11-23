@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin  = require('copy-webpack-plugin');
 
 const env = process.env.NODE_ENV;
@@ -26,6 +25,12 @@ const config = {
   },
 
   externals: {
+    'quill': {
+      'commonjs': 'quill',
+      'commonjs2': 'quill',
+      'amd': 'quill',
+      'root': 'Quill'
+    },
     'react': {
       'commonjs': 'react',
       'commonjs2': 'react',
@@ -51,7 +56,6 @@ const config = {
   },
 
   plugins: [
-    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(env),
     }),
