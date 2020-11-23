@@ -1,126 +1,11 @@
-import React from 'react'
+import * as React from 'react'
 import { isEqual } from 'lodash-es'
-import Quill from 'quill'
+import Quill, { Sources } from 'quill'
 import {
-  EdiotrValue, Editor, DeltaValue, Sources, UnprivilegedEditor, RichSelection, EventType
-} from './type'
-import { EditingArea } from './editing-area'
-import {
-  isDelta, isEditorValueEqual, makeUnprivilegedEditor, setEditorContents, setEditorCursorEnd, useForwardRef, useForwardValueRef, useRefValue, useUpdateEffect
+  isDelta, isEditorValueEqual, makeUnprivilegedEditor, setEditorContents, setEditorCursorEnd, useForwardRef, useForwardValueRef, useUpdateEffect
 } from './utils'
-
+import { Value, Range, DeltaStatic, QuillDirectOptions, ReactEditorProps, UnprivilegedEditor } from '../types'
 const { useEffect, useRef, useState } = React
-
-export type CheckEditorOption = (options?: EditorOptions) => boolean;
-/**
- * Changes to these properties cause the editor instance to be recreated
- * [Quill options documentation](https://quilljs.com/docs/configuration/).
- *
- * Note: We will use object.is to compare these values. When any value changes, the editor instance is recreated
- * So, unless you want the editor instance to be recreated, keep the same reference for these props
- *
- * Note2: If you want to control whether the editor is recreated or not by yourself, you can use the function `checkeditoroption`
- */
-export interface EditorOptions {
-  /**
-   * Default: document.body
-   * DOM Element or a CSS selector for a DOM Element, within which the editor’s ui elements (i.e. tooltips, etc.) should be confined. Currently, it only considers left and right boundaries.
-   */
-  bounds?: HTMLElement | string;
-  /**
-   * Default: All formats
-   * Whitelist of formats to allow in the editor. See [Formats](https://quilljs.com/docs/formats/) for a complete list.
-   */
-  formats?: string[];
-  /**
-   * Collection of modules to include and respective options. See [Modules](https://quilljs.com/docs/modules/) for more information.
-   */
-  modules?: { [x: string]: any };
-  /**
-   * Default: null
-   * If you want to use theme of quill, please import the corresponding CSS manually: node_modules/quill/dist/quill.snow(or bubble).css
-   * [Quill theme documentation](https://quilljs.com/docs/themes/).
-   */
-  editorTheme?: 'snow' | 'bubble';
-  /**
-   * Default: null
-   * DOM Element or a CSS selector for a DOM Element, specifying which container has the scrollbars (i.e. overflow-y: auto),
-   * if is has been changed from the default ql-editor with custom CSS. Necessary to fix scroll jumping bugs when Quill is set to
-   * auto grow its height, and another ancestor container is responsible from the scrolling.
-   */
-  scrollingContainer?: HTMLElement | string;
-  /**
-   * If true, a pre tag is used for the editor area instead of the default div tag. This prevents editor from collapsing continuous whitespaces on paste.
-   */
-  preserveWhitespace?: boolean;
-  /**
-   * Placeholder text to show when editor is empty.
-   */
-  placeholder?: string;
-  /**
-   * Whether to instantiate the editor to read-only mode.
-   */
-  readOnly?: boolean;
-}
-
-/**
- * The changes of these properties will not recreate editor instance, will call editor's API to modify it
- */
-export interface EditorPorps {
-  /**
-   * Set ability for user to edit, via input devices like the mouse or keyboard.
-   * Does not affect capabilities of API calls, when the source is "api" or “silent”.
-   *
-   * Note: When readOnly is true, this property is not valid
-   */
-  enabled?: boolean;
-  tabIndex?: number;
-}
-
-interface _ReactEditorProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-  /**
-   * [Delta](https://quilljs.com/docs/delta/) or string
-   */
-  value?: EdiotrValue;
-  defaultValue?: any;
-  children?: never;
-  /**
-   * When the text in the editor changes
-   */
-  onChange?: (value: EdiotrValue, delta: DeltaValue, source: Sources, editor: UnprivilegedEditor) => any;
-  /**
-   * When the text selection in the editor changes
-   */
-  onSelectionChange?: (nextSelection: RichSelection, source: Sources, editor: UnprivilegedEditor) => any;
-  /**
-   * When the editor first focused
-   */
-  onEditorFocus?: (nextSelection: RichSelection, source: Sources, editor: UnprivilegedEditor) => any;
-  /**
-   * When the selection in the editor is removed
-   * Note: Clicking on other elements that don't accept input now won't trigger this method, if you want this, please use onBlur instead
-   */
-  onEditorBlur?: (nextSelection: RichSelection, source: Sources, editor: UnprivilegedEditor) => any;
-  /**
-   * This is a function to determine whether an editor instance is recreated.
-   * If defined, ReactEditor will call this function with the editor options you passed in as parameters.
-   * If true is returned, the instance will be recreated, otherwise not.
-   *
-   * Default: null
-   *
-   * Note: If not defined, use the default check by ReactEditor
-   * @param options: EditorOptions
-   */
-  checkEditorOption?: CheckEditorOption;
-  /**
-   * A ref that points to the used editor instance.
-   */
-  editorRef?: React.MutableRefObject<Editor> | ((editor: Editor) => void);
-
-  autoFocus?: boolean;
-}
-
-export type ReactEditorProps = _ReactEditorProps & EditorOptions & EditorPorps;
 
 /**
  * When the rich text editor instance is recreated, clear the DOM generated by the `toolbar` module
@@ -145,36 +30,16 @@ const clearToolbarNode = (root: HTMLElement) => {
  * [Quill options documentation](https://quilljs.com/docs/configuration/).
  * @param options
  */
-const useVersion = ({
-  readOnly, modules, formats, bounds, editorTheme, scrollingContainer, preserveWhitespace, checkEditorOption
-}:
-  EditorOptions & { checkEditorOption: CheckEditorOption }, initVersion = 0 as number): number => {
+const useVersion = ({ readOnly, modules, formats, bounds, theme, scrollingContainer, preserveWhitespace }: QuillDirectOptions, initVersion = 0 as number): number => {
   const prevFormatsRef = useRef(formats)
   const [version, setVersion] = useState(initVersion)
-  const checkEditorOptionRef = useRefValue(checkEditorOption)
 
   useUpdateEffect(() => {
-    if (checkEditorOptionRef.current) {
-      const regenerate = checkEditorOptionRef.current({
-        formats, bounds, editorTheme, scrollingContainer, preserveWhitespace
-      })
-      if (regenerate) {
-        setVersion(version + 1)
-      }
-    } else {
-      setVersion(version + 1)
-    }
-  }, [readOnly, modules, bounds, editorTheme, scrollingContainer, preserveWhitespace])
+    setVersion(version + 1)
+  }, [readOnly, modules, bounds, theme, scrollingContainer, preserveWhitespace])
 
   useUpdateEffect(() => {
-    let regenerate = false
-    if (checkEditorOptionRef.current) {
-      regenerate = checkEditorOptionRef.current({
-        formats, bounds, editorTheme, scrollingContainer, preserveWhitespace
-      })
-    } else {
-      regenerate = !isEqual(prevFormatsRef.current, formats)
-    }
+    const regenerate = !isEqual(prevFormatsRef.current, formats)
     if (regenerate) {
       setVersion(version + 1)
     }
@@ -184,12 +49,12 @@ const useVersion = ({
   return version
 }
 
-const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.ForwardedRef<HTMLElement>) => {
+const _ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.RefObject<HTMLElement>) => {
   const {
     bounds,
     formats,
     modules,
-    editorTheme,
+    theme,
     scrollingContainer,
     preserveWhitespace,
     enabled,
@@ -200,22 +65,19 @@ const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.Forwar
     children,
     onChange,
     onSelectionChange,
-    onEditorFocus,
-    onEditorBlur,
-    checkEditorOption,
+    onFocus,
+    onBlur,
     editorRef,
     autoFocus,
     ...others
   } = props
 
   const [elRef, handleRef] = useForwardRef<HTMLElement>(ref)
-  const [editor, setEditor] = useForwardValueRef<Editor>(editorRef)
+  const [editor, setEditor] = useForwardValueRef<Quill>(editorRef)
   const value = typeof propValue !== 'undefined' ? propValue : defaultValue
 
   // When the prop affecting the instance change, the recalculation version is used to update the instance
-  const version = useVersion({
-    readOnly, modules, formats, bounds, editorTheme, scrollingContainer, preserveWhitespace, checkEditorOption
-  })
+  const version = useVersion({ readOnly, modules, formats, bounds, theme, scrollingContainer, preserveWhitespace })
   // Cache delta and section to restore them after the instance is recreated
   const prevDeltaSelectionRef = useRef({ delta: null, selection: null })
 
@@ -225,8 +87,8 @@ const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.Forwar
     if (!el) return
     const { delta, selection } = prevDeltaSelectionRef.current
     const editor = new Quill(el, {
-      readOnly, modules, formats, bounds, theme: editorTheme, scrollingContainer, placeholder
-    }) as unknown as Editor
+      readOnly, modules, formats, bounds, theme: theme, scrollingContainer, placeholder
+    }) as unknown as Quill
     // If delta exists, it means that the editor was not created for the first time. We need to restore the original delta back.
     if (delta) {
       setEditorContents(editor, delta)
@@ -257,16 +119,16 @@ const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.Forwar
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version])
 
-  const selectionRef = useRef<RichSelection>(null)
-  const valueRef = useRef<EdiotrValue>(value)
-  const deltaRef = useRef<DeltaValue>(null)
+  const selectionRef = useRef<Range>(null)
+  const valueRef = useRef<Value>(value)
+  const deltaRef = useRef<DeltaStatic>(null)
 
   // When the editor instance is rebuilt, re register the related events
   useEffect(() => {
     if (!editor) return
     const unprivilegedEditor = makeUnprivilegedEditor(editor)
 
-    const changeText = (_: EdiotrValue, delta: DeltaValue, source: Sources, editor: UnprivilegedEditor) => {
+    const changeText = (_: Value, delta: DeltaStatic, source: Sources, editor: UnprivilegedEditor) => {
       // We keep storing the same type of value as what the user gives us,
       // so that value comparisons will be more stable and predictable.
       const value = isDelta(valueRef.current) ? editor.getContents() : editor.getHTML()
@@ -281,7 +143,7 @@ const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.Forwar
       }
     }
 
-    const changeSelection = (selection: RichSelection, source: Sources, editor: UnprivilegedEditor) => {
+    const changeSelection = (selection: Range, source: Sources, editor: UnprivilegedEditor) => {
       const { current: lastSelection } = selectionRef
       if (isEqual(selection, lastSelection)) {
         return
@@ -293,18 +155,18 @@ const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.Forwar
       onSelectionChange?.(selection, source, editor)
 
       if (hasGainedFocus) {
-        onEditorFocus?.(selection, source, editor)
+        onFocus?.(selection, source, editor)
       } else if (hasLostFocus) {
-        onEditorBlur?.(lastSelection, source, editor)
+        onBlur?.(lastSelection, source, editor)
       }
     }
 
-    editor.on('editor-change', (eventType: EventType, rangeOrDelta: RichSelection | DeltaValue, _: any, source: Sources) => {
+    editor.on('editor-change', (eventType: EventType, rangeOrDelta: Range | DeltaStatic, _: any, source: Sources) => {
       if (eventType === 'selection-change') {
-        changeSelection(rangeOrDelta as RichSelection, source, unprivilegedEditor)
+        changeSelection(rangeOrDelta as Range, source, unprivilegedEditor)
       }
       if (eventType === 'text-change') {
-        changeText(editor.root.innerHTML, rangeOrDelta as DeltaValue, source, unprivilegedEditor)
+        changeText(editor.root.innerHTML, rangeOrDelta as DeltaStatic, source, unprivilegedEditor)
         changeSelection(editor.getSelection(), source, unprivilegedEditor)
       }
     })
@@ -326,7 +188,7 @@ const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.Forwar
       if (value && value === delta) {
         throw new Error(
           'You are passing the `delta` object from the `onChange` event back ' +
-        'as `value`. You most probably want `editor.getContents()` instead'
+          'as `value`. You most probably want `editor.getContents()` instead'
         )
       }
 
@@ -355,6 +217,8 @@ const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.Forwar
     editor.root.setAttribute('data-placeholder', placeholder || '')
   }, [editor, placeholder])
 
+  const Tag = !preserveWhitespace ? 'div' : 'pre'
+
   return (
     <div
       role="textbox"
@@ -362,9 +226,9 @@ const ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.Forwar
       data-version={version}
       {...others}
     >
-      <EditingArea pre={preserveWhitespace} ref={handleRef} />
+      <><Tag data-testid="editing-area" ref={handleRef} /></>
     </div>
   )
 })
 
-export default ReactEditor
+export default _ReactEditor
