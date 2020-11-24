@@ -1,10 +1,7 @@
 import { isEqual } from 'lodash-es'
-import React, {
-  useCallback, useEffect, useMemo, useRef, useState
-} from 'react'
-import {
-  DeltaValue, EdiotrValue, Editor, RichSelection, Sources, UnprivilegedEditor
-} from './type'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Quill, { Sources } from 'quill'
+import { DeltaStatic, Range, UnprivilegedEditor, Value } from '../types'
 
 export type RefValue<T> = React.RefObject<T> | React.MutableRefObject<T> | ((e: T) => void);
 
@@ -14,14 +11,6 @@ export const setRef = (ref: any, value: any) => {
   } else if (ref) {
     ref.current = value
   }
-}
-
-export const useRefValue = <T extends unknown>(value: T): React.MutableRefObject<T> => {
-  const valuesRef = useRef(value)
-  useEffect(() => {
-    valuesRef.current = value
-  })
-  return valuesRef
 }
 
 /**
@@ -99,18 +88,13 @@ export const useUpdateEffect = (effect: () => any, deps: any) => {
   }, deps)
 }
 
-export const setEditorReadOnly = (editor: Editor, value: boolean): void => {
-  value ? editor.disable() : editor.enable()
-}
-
-// Replace the contents of the editor, but keep
-// the previous selection hanging around so that
-// the cursor won't move.
-export const setEditorContents = (editor: Editor, value: EdiotrValue, source?: Sources): void => {
+// Replace the contents of the editor, but keep the previous selection
+// hanging around so that the cursor won't move.
+export const setEditorContents = (editor: Quill, value: Value, source?: Sources): void => {
   const sel = editor.getSelection()
 
   if (typeof value === 'string') {
-    editor.setContents(editor.clipboard.convert(value), source)
+    editor.setContents(editor.clipboard.convert(value as any), source)
   } else {
     editor.setContents(value, source)
   }
@@ -121,7 +105,7 @@ export const setEditorContents = (editor: Editor, value: EdiotrValue, source?: S
 }
 
 // Put the cursor at the end of the content.
-export const setEditorCursorEnd = (editor: Editor, source?: Sources): void => {
+export const setEditorCursorEnd = (editor: Quill, source?: Sources): void => {
   const contentLength = editor.getLength()
   const range = {
     index: contentLength - 1,
@@ -130,17 +114,7 @@ export const setEditorCursorEnd = (editor: Editor, source?: Sources): void => {
   setEditorSelection(editor, range, source)
 }
 
-// Select all the content
-export const setEditorContentSelection = (editor: Editor, source?: Sources): void => {
-  const contentLength = editor.getLength()
-  const range = {
-    index: 0,
-    length: contentLength - 1
-  }
-  setEditorSelection(editor, range, source)
-}
-
-export const setEditorSelection = (editor: Editor, range: RichSelection, source?: Sources): void => {
+export const setEditorSelection = (editor: Quill, range: Range, source?: Sources): void => {
   if (range) {
     // Validate bounds before applying.
     const length = editor.getLength()
@@ -150,45 +124,34 @@ export const setEditorSelection = (editor: Editor, range: RichSelection, source?
   editor.setSelection(range, source)
 }
 
-export const setEditorTabIndex = (editor: Editor, tabIndex: number): void => {
-  if (editor.editor && editor.editor.scroll && editor.editor.scroll.domNode) {
-    editor.editor.scroll.domNode.tabIndex = tabIndex
-  }
-}
-
 // Returns an weaker, unprivileged proxy object that only
 // exposes read-only accessors found on the editor instance,
 // without any state-modificating methods.
-export const makeUnprivilegedEditor = (editor: Editor): UnprivilegedEditor => {
+export const makeUnprivilegedEditor = (editor: Quill): UnprivilegedEditor => {
   if (!editor) return
   return {
-    focus () { return editor.focus.apply(editor, arguments as unknown as []) },
-    blur () { return editor.focus.apply(editor, arguments as unknown as []) },
-    getLength () { return editor.getLength.apply(editor, arguments as unknown as []) },
-    getText () { return editor.getText.apply(editor, arguments as unknown as []) },
-    getHTML () { return editor.root.innerHTML },
-    getContents () { return editor.getContents.apply(editor, arguments as unknown as []) },
-    getSelection () { return editor.getSelection.apply(editor, arguments as unknown as []) },
-    getBounds () { return editor.getBounds.apply(editor, arguments as any) },
-    getFormat () { return editor.getFormat.apply(editor, arguments as unknown as []) },
-    getIndex () { return editor.getIndex.apply(editor, arguments as any) },
-    getLeaf () { return editor.getLeaf.apply(editor, arguments as any) }
+    getLength: function () { return editor.getLength.apply(editor, arguments as unknown as [])},
+    getText: function () { return editor.getText.apply(editor, arguments as unknown as []) },
+    getHTML: function () { return editor.root.innerHTML },
+    getContents: function () { return editor.getContents.apply(editor, arguments as unknown as []) },
+    getSelection: function () { return editor.getSelection.apply(editor, arguments as unknown as []) },
+    getBounds: function () { return editor.getBounds.apply(editor, arguments as any) }
   }
 }
 
 // True if the value is a Delta instance or a Delta look-alike.
 export const isDelta = (value: any): boolean => !!(value && value.ops)
 
-export const isDeltaEqual = (prve: DeltaValue, next: DeltaValue) => {
+export const isDeltaEqual = (prve: DeltaStatic, next: DeltaStatic) => {
   if (isDelta(prve) && isDelta(next)) {
     return isEqual(prve.ops, next.ops)
   }
 }
 
-export const isEditorValueEqual = (prve: EdiotrValue, next: EdiotrValue) => {
+export const isEditorValueEqual = (prve: Value, next: Value) => {
   let equal = false
   if (isDelta(prve) && isDelta(next)) {
-    equal = isDeltaEqual(prve as DeltaValue, next as DeltaValue)
+    equal = isDeltaEqual(prve as DeltaStatic, next as DeltaStatic)
   } else {
     equal = prve === next
   }
