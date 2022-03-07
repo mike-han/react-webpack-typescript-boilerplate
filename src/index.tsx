@@ -52,7 +52,7 @@ const useVersion = ({ readOnly, modules, formats, bounds, theme, scrollingContai
 /**
  * The Quill editor instance.
  */
-const ReactEditor = (props: ReactEditorProps) => {
+export const ReactEditor = (props: ReactEditorProps) => {
   const {
     bounds,
     formats,

@@ -1,14 +1,14 @@
 import React from 'react';
-import ReacteEditor from '../index';
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { ReactEditor } from '../index';
 import { ReactEditorProps } from '../../types';
+import { Meta, Story } from '@storybook/react'
 
 export default {
-  component: ReacteEditor,
-  title: 'CSF/ReacteEditor'
+  component: ReactEditor,
+  title: 'CSF/ReactEditor'
 } as Meta;
 
-const Template: Story<ReactEditorProps> = (args) => <ReacteEditor {...args} />;
+const Template: Story<ReactEditorProps> = (args) => <ReactEditor {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
