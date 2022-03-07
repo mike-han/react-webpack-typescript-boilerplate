@@ -4,7 +4,7 @@ import Quill, { Sources } from 'quill';
 import {
   isDelta, isEditorValueEqual, makeUnprivilegedEditor, setEditorContents, setEditorCursorEnd, useForwardRef, useForwardValueRef, useUpdateEffect
 } from './utils';
-import { Value, Range, DeltaStatic, QuillDirectOptions, ReactEditorProps, UnprivilegedEditor } from '../types';
+import { Value, Range, DeltaStatic, QuillDirectOptions, ReactEditorProps, UnprivilegedEditor, EventType } from '../types';
 const { useEffect, useRef, useState } = React;
 
 /**
@@ -26,7 +26,7 @@ const clearToolbarNode = (root: HTMLElement) => {
 
 /**
  * Changing these parameters will change the `version`,
- * Changing the `version` will recreate the editor instance
+ * Changing the `version` will recreate the editor instance.
  * [Quill options documentation](https://quilljs.com/docs/configuration/).
  * @param options
  */
@@ -49,7 +49,10 @@ const useVersion = ({ readOnly, modules, formats, bounds, theme, scrollingContai
   return version;
 };
 
-const _ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.RefObject<HTMLElement>) => {
+/**
+ * The Quill editor instance.
+ */
+const ReactEditor = (props: ReactEditorProps) => {
   const {
     bounds,
     formats,
@@ -72,7 +75,7 @@ const _ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.RefOb
     ...others
   } = props;
 
-  const [elRef, handleRef] = useForwardRef<HTMLElement>(ref);
+  const [elRef, handleRef] = useForwardRef<HTMLElement>({current: null});
   const [editor, setEditor] = useForwardValueRef<Quill>(editorRef);
   const value = typeof propValue !== 'undefined' ? propValue : defaultValue;
 
@@ -229,6 +232,6 @@ const _ReactEditor = React.forwardRef((props: ReactEditorProps, ref: React.RefOb
       <><Tag data-testid="editing-area" ref={handleRef} /></>
     </div>
   );
-});
+}
 
-export default _ReactEditor;
+export default ReactEditor;

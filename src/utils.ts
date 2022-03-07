@@ -1,10 +1,13 @@
+import React from 'react';
 import { isEqual } from 'lodash-es';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Quill, { Sources } from 'quill';
 import { DeltaStatic, Range, UnprivilegedEditor, Value } from '../types';
 
-export type RefValue<T> = React.RefObject<T> | React.MutableRefObject<T> | ((e: T) => void);
-
+/**
+ * This function is used to set the value to a ref.
+ * @param ref {any}
+ * @param value {any}
+ */
 export const setRef = (ref: any, value: any) => {
   if (typeof ref === 'function') {
     ref(value);
@@ -16,7 +19,7 @@ export const setRef = (ref: any, value: any) => {
 /**
   * This will create a new function if the ref props change and are defined.
   */
-export const useForkRef = <T>(refA: RefValue<T>, refB: RefValue<T>) => useMemo(() => {
+export const useForkRef = <T>(refA: React.Ref<T>, refB: React.Ref<T>) => React.useMemo(() => {
   if (refA == null && refB == null) {
     return null;
   }
@@ -30,11 +33,11 @@ export const useForkRef = <T>(refA: RefValue<T>, refB: RefValue<T>) => useMemo((
  * Receives a ref, returns a ref and a callback function to assign values to both refs
  * @param ref
  */
-export const useForwardRef = <T extends unknown>(ref: RefValue<T>): [React.RefObject<T>, (arg0: T) => void] => {
-  const innerRef = useRef<T>(null);
+export const useForwardRef = <T extends unknown>(ref: React.Ref<T>): [React.RefObject<T>, (arg0: T) => void] => {
+  const innerRef = React.useRef<T>(null);
   const forkedRef = useForkRef<T>(innerRef, ref);
 
-  const handleRef = useCallback((e) => {
+  const handleRef = React.useCallback((e) => {
     setRef(forkedRef, e);
   }, [forkedRef]);
 
@@ -45,9 +48,9 @@ export const useForwardRef = <T extends unknown>(ref: RefValue<T>): [React.RefOb
  * Receives a ref, return a callback function to assign val to ref and setVal
  * @param ref
  */
-export const useForwardValueRef = <T>(ref: RefValue<T>): [T, (e: T) => void] => {
-  const [val, setVal] = useState<T>(null as any);
-  const valRef = useCallback((e: T) => {
+export const useForwardValueRef = <T>(ref: React.Ref<T>): [T, (e: T) => void] => {
+  const [val, setVal] = React.useState<T>(null as any);
+  const valRef = React.useCallback((e: T) => {
     setVal(e);
     setRef(ref, e);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,7 +62,7 @@ export const useForwardValueRef = <T>(ref: RefValue<T>): [T, (e: T) => void] => 
  * Returns true if component is just mounted (on first render) and false otherwise.
  */
 export const useFirstMountState = (): boolean => {
-  const isFirst = useRef(true);
+  const isFirst = React.useRef(true);
 
   if (isFirst.current) {
     isFirst.current = false;
@@ -72,7 +75,7 @@ export const useFirstMountState = (): boolean => {
 
 /**
  * React effect hook that ignores the first invocation (e.g. on mount).
- * The signature is exactly the same as the useEffect hook.
+ * The signature is exactly the same as the React.useEffect hook.
  *
  * @param effect
  * @param deps
@@ -80,7 +83,7 @@ export const useFirstMountState = (): boolean => {
 export const useUpdateEffect = (effect: () => any, deps: any) => {
   const isFirstMount = useFirstMountState();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isFirstMount) {
       return effect();
     }
@@ -124,9 +127,11 @@ export const setEditorSelection = (editor: Quill, range: Range, source?: Sources
   editor.setSelection(range, source);
 };
 
-// Returns an weaker, unprivileged proxy object that only
-// exposes read-only accessors found on the editor instance,
-// without any state-modificating methods.
+/**
+ * Returns an weaker, unprivileged proxy object that only exposes read-only accessors found on the editor instance, without any state-modificating methods.
+ * @param editor {Quill}
+ * @returns {UnprivilegedEditor}
+ */
 export const makeUnprivilegedEditor = (editor: Quill): UnprivilegedEditor => {
   if (!editor) return;
   return {
@@ -139,15 +144,31 @@ export const makeUnprivilegedEditor = (editor: Quill): UnprivilegedEditor => {
   };
 };
 
-// True if the value is a Delta instance or a Delta look-alike.
+/**
+ * True if the value is a Delta instance or a Delta look-alike.
+ * @param value {any}
+ * @returns {boolean}
+ */
 export const isDelta = (value: any): boolean => !!(value && value.ops);
 
+/**
+ * Checks if the two deltas are the same.
+ * @param prve {DeltaStatic}
+ * @param next {DeltaStatic}
+ * @returns {boolean}
+ */
 export const isDeltaEqual = (prve: DeltaStatic, next: DeltaStatic) => {
   if (isDelta(prve) && isDelta(next)) {
     return isEqual(prve.ops, next.ops);
   }
 };
 
+/**
+ * Checks if the two values are the same.
+ * @param prve {Value}
+ * @param next {Value}
+ * @returns {boolean}
+ */
 export const isEditorValueEqual = (prve: Value, next: Value) => {
   let equal = false;
   if (isDelta(prve) && isDelta(next)) {

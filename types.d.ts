@@ -3,12 +3,13 @@ import {
   RangeStatic,
   BoundsStatic,
   Sources
-} from 'quill'
+} from 'quill';
 import Delta = require('quill-delta');
 
 // Merged namespace hack to export types along with default object
 // See: https://github.com/Microsoft/TypeScript/issues/2719
 
+export type EventType = 'text-change' | 'selection-change' | 'editor-change' | 'scroll-optimize'
 export type DeltaStatic = Delta;
 export type Value = string | DeltaStatic;
 export type Range = RangeStatic | null;
@@ -33,25 +34,41 @@ export type QuillOptions = QuillDirectOptions & QuillOptionsStatic & {
   tabIndex?: number
 }
 
-export type ReactEditorProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> & {
+export interface ReactEditorProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>, QuillOptions {
   defaultValue?: Value,
+  /**
+   * [Delta](https://quilljs.com/docs/delta/) or string
+   */
   value?: Value,
+  /**
+   * When the text in the editor changes
+   */
   onChange?(
     value: string,
     delta: DeltaStatic,
     source: Sources,
     editor: UnprivilegedEditor,
   ): void,
+  /**
+   * When the text selection in the editor changes
+   */
   onSelectionChange?(
     selection: Range,
     source: Sources,
     editor: UnprivilegedEditor,
   ): void,
+  /**
+   * When the editor first focused
+   */
   onFocus?(
     selection: Range,
     source: Sources,
     editor: UnprivilegedEditor,
   ): void,
+  /**
+   * When the selection in the editor is removed
+   * Note: Clicking on other elements that don't accept input now won't trigger this method, if you want this, please use onBlur instead
+   */
   onBlur?(
     previousSelection: Range,
     source: Sources,
@@ -69,7 +86,7 @@ export type ReactEditorProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'onCha
    * A ref that points to the used editor instance.
    */
   editorRef?: React.MutableRefObject<Quill> | ((quill: Quill) => void)
-} & QuillOptions;
+}
 
 export interface UnprivilegedEditor {
   getLength(): number;

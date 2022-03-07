@@ -28,7 +28,7 @@
     "rules": {
         "no-use-before-define": "off",
         "no-undef": "off",
-        "semi": ["error", "always"],
+        "semi": ["error", "off"],
         "react/prop-types":"off",
         "react/no-unescaped-entities": "off"
     }
