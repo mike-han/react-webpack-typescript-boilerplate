@@ -1,8 +1,2 @@
-.DS_Store
-*.log
 node_modules
-umd
-coverage
-npm-debug.log
-types
-demo/build
+.vacode
