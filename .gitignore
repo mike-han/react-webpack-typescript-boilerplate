@@ -1,6 +1,2 @@
-# Dependencies
-/node_modules
-
-# Compiled files
-/dist
-/demo
+node_modules
+.vacode
