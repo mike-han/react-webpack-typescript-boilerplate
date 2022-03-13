@@ -6,16 +6,31 @@
   "types": "dist/types/index.d.ts",
   "module": "dist/esm/index.js",
   "scripts": {
-    "build": "rimraf dist && tsc && webpack --node-env=production && npm run build:esm",
+    "build": "rimraf dist &&  && webpack --node-env=production && npm run build:esm",
     "build:esm": "cross-env ESM=true webpack --node-env=production",
     "tscheck": "cross-env TSCHECK=true webpack --node-env=development",
     "lint": "eslint ./src --ext .ts,.tsx,.js"
   },
+  "keywords": [
+    "react",
+    "react-component",
+    "rich",
+    "text",
+    "rich-text",
+    "textarea",
+    "quill",
+    "plugin"
+  ],
+  "files": [
+    "dist/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mike-han/react-editor.git"
   },
-  "keywords": [],
   "author": "mike",
   "license": "ISC",
   "bugs": {
