@@ -1,0 +1,10 @@
+{
+  "packageFiles": [
+    "package.json"
+  ],
+  "bumpFiles": [
+    "package.json",
+    "package-lock.json"
+  ],
+  "releaseCommitMessageFormat": "chore(release): publish {{currentTag}} [skip-ci]"
+}
