@@ -1,7 +1,7 @@
 {
   "name": "react-editor-test",
   "version": "1.0.0",
-  "description": "A quill.js based rich text editor",
+  "description": "A quill-based react component that controls the editor via custom plugins.",
   "main": "dist/cjs/index.js",
   "types": "dist/types/index.d.ts",
   "module": "dist/esm/index.js",
@@ -30,6 +30,9 @@
     "CHANGELOG.md",
     "LICENSE"
   ],
+  "publishConfig": {
+    "@mike-han/registry": "https://npm.pkg.github.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mike-han/react-editor.git"
