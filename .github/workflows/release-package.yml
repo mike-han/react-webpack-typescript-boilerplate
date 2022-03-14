@@ -5,6 +5,22 @@ on:
     types: [created]
 
 jobs:
+  npmrc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        always-auth: true
+        node-version: '14.x'
+        registry-url: https://registry.npmjs.org
+        scope: '@mike-han'
+    - name: Install dependencies
+      run: npm ci
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -12,7 +28,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.x
-      - run: npm ci
       - run: npm run build
 
   publish-gpr:
@@ -27,7 +42,6 @@ jobs:
         with:
           node-version: 14.x
           registry-url: https://npm.pkg.github.com/
-      - run: npm ci
       - run: npm publish --access publich
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
