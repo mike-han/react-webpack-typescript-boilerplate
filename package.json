@@ -1,6 +1,6 @@
 {
   "name": "react-editor-test",
-  "version": "1.0.0",
+  "version": "1.0.1-0",
   "description": "A quill-based react component that controls the editor via custom plugins.",
   "main": "dist/cjs/index.js",
   "types": "dist/types/index.d.ts",
