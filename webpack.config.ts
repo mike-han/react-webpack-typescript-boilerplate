@@ -1,45 +1,45 @@
-import * as path from 'path'
-import * as webpack from 'webpack'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import * as path from "path";
+import * as webpack from "webpack";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
-const isProduction = process.env.NODE_ENV == 'production'
-const isTSCheck = !!process.env.TSCHECK
-const isESM = !!process.env.ESM
+const isProduction = process.env.NODE_ENV == "production";
+const isTSCheck = !!process.env.TSCHECK;
+const isESM = !!process.env.ESM;
 
 const config: webpack.Configuration = {
   output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, `dist/${isESM ? 'esm' : 'cjs'}`),
+    filename: "index.js",
+    path: path.resolve(__dirname, `dist/${isESM ? "esm" : "cjs"}`),
     library: {
-      type: isESM ? 'module' : 'commonjs2',
-    }
+      type: isESM ? "module" : "commonjs2",
+    },
   },
   experiments: {
-    outputModule: isESM
+    outputModule: isESM,
   },
   module: {
     rules: [
       {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
-        use: 'babel-loader'
-      }
-    ]
+        use: "babel-loader",
+      },
+    ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.json']
+    extensions: [".tsx", ".ts", ".js", ".json"],
   },
   externals: {
-    react: 'react',
+    react: "react",
   },
-  plugins: []
-}
+  plugins: [],
+};
 
 if (isProduction) {
-  config.mode = 'production'
+  config.mode = "production";
 } else {
-  config.mode = 'development'
-  config.devtool = 'inline-source-map'
+  config.mode = "development";
+  config.devtool = "inline-source-map";
   if (isTSCheck) {
     config.plugins?.push(
       new ForkTsCheckerWebpackPlugin({
@@ -47,12 +47,12 @@ if (isProduction) {
         typescript: {
           diagnosticOptions: {
             semantic: true,
-            syntactic: true
-          }
-        }
+            syntactic: true,
+          },
+        },
       })
-    )
+    );
   }
 }
 
-export default config
+export default config;
