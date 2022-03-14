@@ -31,7 +31,7 @@
     "LICENSE"
   ],
   "publishConfig": {
-    "@mike-han/registry": "https://npm.pkg.github.com"
+    "@mike-han:registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",
