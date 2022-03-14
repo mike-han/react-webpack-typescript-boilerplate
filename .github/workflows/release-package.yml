@@ -23,6 +23,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    needs: npmrc
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
