@@ -7,7 +7,7 @@
   "module": "dist/esm/index.js",
   "scripts": {
     "prepare": "husky install",
-    "build": "rimraf dist &&  && webpack --node-env=production && npm run build:esm",
+    "build": "rimraf dist && webpack --node-env=production && npm run build:esm",
     "build:esm": "cross-env ESM=true webpack --node-env=production",
     "tscheck": "cross-env TSCHECK=true webpack --node-env=development",
     "lint": "eslint ./src --ext .ts,.tsx,.js",
