@@ -4,18 +4,14 @@ import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
 const isProduction = process.env.NODE_ENV == "production";
 const isTSCheck = !!process.env.TSCHECK;
-const isESM = !!process.env.ESM;
 
 const config: webpack.Configuration = {
   output: {
     filename: "index.js",
-    path: path.resolve(__dirname, `dist/${isESM ? "esm" : "cjs"}`),
+    path: path.resolve(__dirname, `dist/cjs`),
     library: {
-      type: isESM ? "module" : "commonjs2",
+      type: 'umd',
     },
-  },
-  experiments: {
-    outputModule: isESM,
   },
   module: {
     rules: [
