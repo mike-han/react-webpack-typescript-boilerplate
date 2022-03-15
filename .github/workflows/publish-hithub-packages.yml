@@ -4,8 +4,8 @@
 name: Publish github package
 
 on:
-  push:
-    branches: [ f-ming-v1 ]
+  release:
+    types: [created]
 
 jobs:
   publish-gpr:
