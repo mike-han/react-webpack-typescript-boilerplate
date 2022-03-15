@@ -4,11 +4,9 @@
   "description": "A quill-based react component that controls the editor via custom plugins.",
   "main": "dist/cjs/index.js",
   "types": "dist/types/index.d.ts",
-  "module": "dist/esm/index.js",
   "scripts": {
     "prepare": "husky install",
-    "build": "rimraf dist && webpack --node-env=production && npm run build:esm",
-    "build:esm": "cross-env ESM=true webpack --node-env=production",
+    "build": "rimraf dist && tsc && webpack --node-env=production",
     "tscheck": "cross-env TSCHECK=true webpack --node-env=development",
     "lint": "eslint ./src --ext .ts,.tsx,.js",
     "lint:fix": "npm run lint --fix",
