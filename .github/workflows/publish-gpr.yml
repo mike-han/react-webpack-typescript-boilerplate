@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
-          scope: "@mike-han"
+          scope: '@mike-han'
       - run: node gpr-hack.js
       - run: npm ci
       - run: npm run build

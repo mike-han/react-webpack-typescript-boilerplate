@@ -2,7 +2,7 @@ name: Build
 
 on:
   pull_request:
-    branches: [main]
+    branches: [develop, main]
 
 jobs:
   run-commitlint-on-pr:
@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -44,3 +45,6 @@ jobs:
 
       - name: lint
         run: npm run lint --if-present
+
+      - name: test
+        run: npm run test --if-present
