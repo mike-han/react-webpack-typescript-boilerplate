@@ -1,7 +1,7 @@
 {
   "name": "react-webpack-typescript-boilerplate",
   "version": "1.0.0",
-  "description": "An open source library boilerplate based on react webpack and typescript.",
+  "description": "A react library boilerplate based on webpack and typescript.",
   "main": "dist/cjs/index.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
@@ -15,7 +15,6 @@
   },
   "keywords": [
     "react",
-    "react-component",
     "typescript",
     "webpack",
     "boilerplate"
