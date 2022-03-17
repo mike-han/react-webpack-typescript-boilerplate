@@ -1,7 +1,17 @@
-# ReactEditor [![Build](https://github.com/mike-han/react-editor/actions/workflows/build.yml/badge.svg)](https://github.com/mike-han/react-editor/actions/workflows/ci.yml)  [![npm](https://img.shields.io/npm/v/react-editor-test.svg)](https://www.npmjs.com/package/react-editor-test)  [![npm downloads](https://img.shields.io/npm/dt/react-editor-test.svg?maxAge=2592000)](http://www.npmtrends.com/react-editor-test)
+# React webpack typescript boilerplate [![Build](https://github.com/mike-han/react-webpack-typescript-boilerplate/actions/workflows/build.yml/badge.svg)](https://github.com/mike-han/react-webpack-typescript-boilerplate/actions/workflows/ci.yml)  [![npm](https://img.shields.io/npm/v/react-webpack-typescript-boilerplate.svg)](https://www.npmjs.com/package/react-webpack-typescript-boilerplate)  [![npm downloads](https://img.shields.io/npm/dt/react-webpack-typescript-boilerplate.svg?maxAge=2592000)](http://www.npmtrends.com/react-webpack-typescript-boilerplate)
 
-A quill-based react component that controls the editor via custom plugins.
+An open source library boilerplate based on react webpack and typescript
 
-When using react and quill in combination, the ui of the toolbar provided by quill.js always can not meet my needs. This library will wrap quill into a react component and allow users to completely customize the ui of the toolbar in the form of a plugin. 
+Technology used:
 
-***Note: In the test release, there is only one empty component, do not download it yet***
+- React
+- Typescript
+- Webpack
+- Babel
+- Jest
+- @testing-library
+- eslint
+- prettier
+- standard-version
+- husky
+- commitlint
