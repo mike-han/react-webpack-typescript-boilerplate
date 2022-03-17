@@ -12,5 +12,5 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
-  coverageReporters: ['text-summary'],
+  coverageReporters: ['json-summary', 'text-summary']
 };
