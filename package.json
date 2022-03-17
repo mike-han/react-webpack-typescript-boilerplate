@@ -1,7 +1,7 @@
 {
-  "name": "react-editor-test",
+  "name": "react-webpack-typescript-boilerplate",
   "version": "1.0.0",
-  "description": "A quill-based react component that controls the editor via custom plugins.",
+  "description": "An open source library boilerplate based on react webpack and typescript.",
   "main": "dist/cjs/index.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
@@ -16,12 +16,9 @@
   "keywords": [
     "react",
     "react-component",
-    "rich",
-    "text",
-    "rich-text",
-    "textarea",
-    "quill",
-    "plugin"
+    "typescript",
+    "webpack",
+    "boilerplate"
   ],
   "files": [
     "dist/",
@@ -31,19 +28,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mike-han/react-editor.git"
+    "url": "git+https://github.com/mike-han/react-webpack-typescript-boilerplate.git"
   },
   "author": "mike",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mike-han/react-editor/issues"
+    "url": "https://github.com/mike-han/react-webpack-typescript-boilerplate/issues"
   },
-  "homepage": "https://github.com/mike-han/react-editor#readme",
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/react": "^12.1.4",
-    "eslint-config-prettier": "^8.5.0"
-  },
+  "homepage": "https://github.com/mike-han/react-webpack-typescript-boilerplate#readme",
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@babel/preset-env": "^7.16.11",
@@ -51,6 +44,8 @@
     "@babel/preset-typescript": "^7.16.7",
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.4",
     "@types/fork-ts-checker-webpack-plugin": "^0.4.5",
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.21",
@@ -61,6 +56,7 @@
     "babel-loader": "^8.2.3",
     "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",

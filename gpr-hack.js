@@ -6,6 +6,6 @@ const file = readFileSync("./package.json", {
 
 const json = JSON.parse(file);
 
-json.name = "@mike-han/react-editor-test";
+json.name = "@mike-han/react-webpack-typescript-boilerplate";
 
 writeFileSync("./package.json", JSON.stringify(json, undefined, 2));
