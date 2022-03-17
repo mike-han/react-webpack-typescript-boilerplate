@@ -17,3 +17,4 @@ Technology used:
 - [commitlint](https://github.com/conventional-changelog/commitlint)
 - [github packages](https://github.com/features/packages)
 - [npm](https://www.npmjs.com/)
+- [github action](https://github.com/features/actions)
