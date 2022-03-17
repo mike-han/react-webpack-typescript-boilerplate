@@ -4,3 +4,5 @@ webpack*.ts
 commitlint.config.js
 *.js
 *.json
+coverage
+__tests__
